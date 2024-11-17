@@ -9,9 +9,19 @@ import SwiftUI
 
 @main
 struct iCitizenApp: App {
+    
+    @StateObject private var loginState = LoginState() // Create the LoginState object
+
     var body: some Scene {
         WindowGroup {
-            LoginView()
+            // Switching views based on login state
+            if loginState.isLoggedIn {
+                HomePage()
+                    .environmentObject(loginState)
+            } else {
+                LoginPage()
+                    .environmentObject(loginState)
+            }
         }
     }
 }
