@@ -104,29 +104,4 @@ struct LoginPage: View {
     }
 }
 
-struct HomePage: View {
-    @EnvironmentObject var loginState: LoginState
-    
-    var body: some View {
-        VStack {
-            Text("Welcome to the Home Page!")
-                .font(.largeTitle)
-                .padding()
-            
-            Button(action: {
-                self.logout()
-            }) {
-                Text("Logout")
-                    .font(.title)
-                    .foregroundColor(.red)
-                    .padding()
-                    .background(Color.white)
-                    .cornerRadius(10)
-            }
-        }
-    }
-    
-    private func logout() {
-        loginState.isLoggedIn = false
-    }
-}
+
