@@ -22,6 +22,11 @@ struct HomePage: View {
                     Label("Profile", systemImage: "person.fill")
                 }
             
+            MLAMonitoringView()
+                .tabItem {
+                    Label("MLA meet", systemImage: "person.bust.circle.fill")
+                }
+            
             ReportIssueView()
                            .tabItem {
                                Label("Report Issue", systemImage: "exclamationmark.triangle.fill")
