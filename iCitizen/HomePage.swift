@@ -9,37 +9,51 @@ import SwiftUI
 
 struct HomePage: View {
     @EnvironmentObject var loginState: LoginState
-
+    
     var body: some View {
         TabView {
             DashboardView()
                 .tabItem {
                     Label("Dashboard", systemImage: "house.fill")
                 }
-
-            ProfileView()
+            ResearchSurveysView()
                 .tabItem {
-                    Label("Profile", systemImage: "person.fill")
+                    Label("Research & Earn", systemImage: "sparkle.magnifyingglass")
                 }
+            
+            
+            
+            ReportIssueView()
+                .tabItem {
+                    Label("Report Issue", systemImage: "exclamationmark.triangle.fill")
+                }
+            
             
             MLAMonitoringView()
                 .tabItem {
                     Label("MLA meet", systemImage: "person.bust.circle.fill")
                 }
             
-            ReportIssueView()
-                           .tabItem {
-                               Label("Report Issue", systemImage: "exclamationmark.triangle.fill")
-                           }
-
+            
+            RewardsGamificationView()
+                .tabItem {
+                    Label("Rewards", systemImage: "bitcoinsign")
+                }
+            
+            ProfileView()
+                .tabItem {
+                    Label("Profile", systemImage: "person.fill")
+                }
+            
+            
             SettingsView(logoutAction: logout)
                 .tabItem {
                     Label("Settings", systemImage: "gearshape.fill")
                 }
         }
-        .accentColor(.purple) // Customize the tab selection color
+        .accentColor(.red) // Customize the tab selection color
     }
-
+    
     private func logout() {
         loginState.isLoggedIn = false
     }
@@ -49,21 +63,21 @@ struct HomePage: View {
 // Settings View
 struct SettingsView: View {
     let logoutAction: () -> Void
-
+    
     var body: some View {
         VStack {
             Text("Settings")
                 .font(.largeTitle)
                 .fontWeight(.bold)
                 .padding()
-
+            
             Text("Configure app preferences and account settings.")
                 .font(.body)
                 .multilineTextAlignment(.center)
                 .padding()
-
+            
             Spacer()
-
+            
             // Logout Button
             Button(action: {
                 logoutAction()

@@ -7,8 +7,8 @@
 import SwiftUI
 
 struct ProfileView: View {
-    @State private var userName: String = "John Doe"
-    @State private var userEmail: String = "john.doe@example.com"
+    @State private var userName: String = "User1"
+    @State private var userEmail: String = "User1@example.com"
     @State private var showEditProfile: Bool = false
     
     var body: some View {
