@@ -21,6 +21,11 @@ struct HomePage: View {
                 .tabItem {
                     Label("Profile", systemImage: "person.fill")
                 }
+            
+            ReportIssueView()
+                           .tabItem {
+                               Label("Report Issue", systemImage: "exclamationmark.triangle.fill")
+                           }
 
             SettingsView(logoutAction: logout)
                 .tabItem {

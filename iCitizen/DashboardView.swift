@@ -8,7 +8,7 @@ import SwiftUI
 import Charts
 
 struct DashboardView: View {
-    @State private var userName: String = "John Doe"
+    @State private var userName: String = "User"
     @State private var chartData: [ChartData] = [
         .init(day: "Mon", value: 30),
         .init(day: "Tue", value: 50),
