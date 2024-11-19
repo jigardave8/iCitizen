@@ -35,43 +35,6 @@ struct HomePage: View {
     }
 }
 
-// Dashboard View
-struct DashboardView: View {
-    var body: some View {
-        VStack {
-            Text("Dashboard")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .padding()
-
-            Text("Welcome to the Dashboard! Explore your data and insights here.")
-                .font(.body)
-                .multilineTextAlignment(.center)
-                .padding()
-
-            Spacer()
-        }
-    }
-}
-
-// Profile View
-struct ProfileView: View {
-    var body: some View {
-        VStack {
-            Text("Profile")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .padding()
-
-            Text("Manage your account details and personal information.")
-                .font(.body)
-                .multilineTextAlignment(.center)
-                .padding()
-
-            Spacer()
-        }
-    }
-}
 
 // Settings View
 struct SettingsView: View {
