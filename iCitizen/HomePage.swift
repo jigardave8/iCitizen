@@ -5,14 +5,19 @@
 //  Created by BitDegree on 18/11/24.
 //
 
+//
+//  HomePage.swift
+//  iCitizen
+//
+//  Created by BitDegree on 18/11/24.
+//
+
 import SwiftUI
 
 struct HomePage: View {
     @EnvironmentObject var loginState: LoginState
-    
-    // Floating menu state
     @State private var isMenuOpen = false
-    
+
     var body: some View {
         ZStack {
             // Main TabView
@@ -55,134 +60,158 @@ struct HomePage: View {
                     }
             }
             .accentColor(.red) // Customize the tab selection color
-            
-            // Floating Menu positioned above the TabView
-            VStack {
-                Spacer()
-                
-                HStack {
-                    Spacer()
-                    
-                    FloatingMenu(isMenuOpen: $isMenuOpen)
-                        .padding(.trailing, 16) // Padding from right edge
-                        .padding(.bottom, 60) // Positioned above TabBar
-                }
-            }
+
+            // Floating Action Button
+            FloatingActionButton(isMenuOpen: $isMenuOpen)
         }
     }
-    
+
     private func logout() {
         loginState.isLoggedIn = false
     }
 }
 
-// Floating Menu Component
-struct FloatingMenu: View {
+// Floating Action Button Component
+// Floating Action Button Component
+struct FloatingActionButton: View {
     @Binding var isMenuOpen: Bool
+    @State private var showMenu = false
+    
+    // Define menu items
+    private let menuItems: [(icon: String, label: String, action: () -> Void)] = [
+        ("phone.fill", "Emergency Call", { print("Emergency Call tapped") }),
+        ("car.fill", "Book Cab", { print("Book Cab tapped") }),
+        ("wrench.and.screwdriver.fill", "Report Issue", { print("Report Issue tapped") })
+    ]
     
     var body: some View {
-        ZStack {
-            // Background overlay when menu is open
-            if isMenuOpen {
-                Color.black.opacity(0.4)
-                    .edgesIgnoringSafeArea(.all)
-                    .onTapGesture {
-                        withAnimation {
-                            isMenuOpen = false
+        VStack {
+            Spacer()
+            HStack {
+                Spacer()
+                ZStack {
+                    // Menu Items
+                    if isMenuOpen {
+                        VStack(spacing: 12) {
+                            ForEach(menuItems.indices, id: \.self) { index in
+                                MenuButton(
+                                    icon: menuItems[index].icon,
+                                    label: menuItems[index].label,
+                                    action: {
+                                        withAnimation {
+                                            menuItems[index].action()
+                                            isMenuOpen = false
+                                        }
+                                    }
+                                )
+                                .transition(.asymmetric(
+                                    insertion: .scale(scale: 0.1)
+                                        .combined(with: .opacity)
+                                        .combined(with: .move(edge: .trailing)),
+                                    removal: .scale(scale: 0.1)
+                                        .combined(with: .opacity)
+                                ))
+                                .animation(
+                                    .spring(
+                                        response: 0.3,
+                                        dampingFraction: 0.7,
+                                        blendDuration: 0
+                                    ).delay(Double(index) * 0.1),
+                                    value: isMenuOpen
+                                )
+                            }
+                        }
+                        .padding(.bottom, 85)
+                    }
+                    
+                    // Main FAB
+                    Button(action: {
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                            isMenuOpen.toggle()
+                        }
+                    }) {
+                        ZStack {
+                            Circle()
+                                .fill(Color.blue)
+                                .frame(width: 56, height: 56)
+                                .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 2)
+                            
+                            Image(systemName: "plus")
+                                .font(.system(size: 24, weight: .semibold))
+                                .foregroundColor(.white)
+                                .rotationEffect(.degrees(isMenuOpen ? 45 : 0))
                         }
                     }
-            }
-            
-            // Floating Button and Menu
-            VStack(spacing: 12) {
-                if isMenuOpen {
-                    FloatingMenuButton(icon: "phone.fill", label: "SOS Call") {
-                        openPhoneCall()
-                    }
-                    FloatingMenuButton(icon: "car.fill", label: "Book Cab") {
-                        print("Book Cab pressed")
-                    }
-                    FloatingMenuButton(icon: "wrench.and.screwdriver.fill", label: "Fix Issue") {
-                        print("Fix Issue pressed")
-                    }
+                    .accessibility(label: Text("Quick Actions Menu"))
                 }
-                
-                // Main Floating Button
-                Button(action: {
-                    withAnimation {
-                        isMenuOpen.toggle()
-                    }
-                }) {
-                    Image(systemName: "plus.circle.fill")
-                        .resizable()
-                        .frame(width: 60, height: 60)
-                        .foregroundColor(.red)
-                        .rotationEffect(.degrees(isMenuOpen ? 45 : 0))
-                        .shadow(color: .gray.opacity(0.5), radius: 8, x: 2, y: 2)
-                }
+                .padding(.trailing, 16)
             }
+            .padding(.bottom, 16)
         }
+        .background(
+            Group {
+                if isMenuOpen {
+                    Color.black.opacity(0.4)
+                        .ignoresSafeArea()
+                        .onTapGesture {
+                            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                                isMenuOpen = false
+                            }
+                        }
+                        .transition(.opacity)
+                }
+            }
+        )
     }
 }
 
-// Floating Menu Button Component
-struct FloatingMenuButton: View {
+// Improved Menu Button Component
+struct MenuButton: View {
     let icon: String
     let label: String
     let action: () -> Void
     
     var body: some View {
         Button(action: action) {
-            HStack(spacing: 8) {
+            HStack(spacing: 12) {
                 Image(systemName: icon)
-                    .font(.title2)
+                    .font(.system(size: 20))
                     .foregroundColor(.white)
+                    .frame(width: 24)
+                
                 Text(label)
-                    .font(.body)
+                    .font(.system(size: 16, weight: .medium))
                     .foregroundColor(.white)
             }
-            .padding()
-            .background(Color.blue)
-            .cornerRadius(10)
-            .shadow(color: .gray.opacity(0.5), radius: 5, x: 2, y: 2)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+            .background(
+                Capsule()
+                    .fill(Color.blue)
+                    .shadow(color: .black.opacity(0.15), radius: 3, x: 0, y: 2)
+            )
         }
     }
 }
 
-// Utility for opening calls
-func openPhoneCall() {
-    guard let number = URL(string: "tel://123456789") else { return }
-    UIApplication.shared.open(number)
-}
-
-// Preview for SwiftUI
-struct HomePage_Previews: PreviewProvider {
-    static var previews: some View {
-        HomePage()
-            .environmentObject(LoginState())
-    }
-}
-
-
-
 // Settings View
 struct SettingsView: View {
     let logoutAction: () -> Void
-    
+
     var body: some View {
         VStack {
             Text("Settings")
                 .font(.largeTitle)
                 .fontWeight(.bold)
                 .padding()
-            
+
             Text("Configure app preferences and account settings.")
                 .font(.body)
                 .multilineTextAlignment(.center)
                 .padding()
-            
+
             Spacer()
-            
+
             // Logout Button
             Button(action: {
                 logoutAction()
@@ -200,3 +229,10 @@ struct SettingsView: View {
     }
 }
 
+// Preview for SwiftUI
+struct HomePage_Previews: PreviewProvider {
+    static var previews: some View {
+        HomePage()
+            .environmentObject(LoginState())
+    }
+}
