@@ -70,7 +70,7 @@ struct LoginPage: View {
                         .foregroundColor(.white)
                         .padding()
                         .frame(maxWidth: .infinity)
-                        .background(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.purple]),
+                        .background(LinearGradient(gradient: Gradient(colors: [Color.indigo, Color.secondary]),
                                                    startPoint: .leading,
                                                    endPoint: .trailing))
                         .cornerRadius(10)
