@@ -5,12 +5,7 @@
 //  Created by BitDegree on 18/11/24.
 //
 
-//
-//  HomePage.swift
-//  iCitizen
-//
-//  Created by BitDegree on 18/11/24.
-//
+
 
 import SwiftUI
 
@@ -72,27 +67,36 @@ struct HomePage: View {
 }
 
 // Floating Action Button Component
-// Floating Action Button Component
 struct FloatingActionButton: View {
     @Binding var isMenuOpen: Bool
-    @State private var showMenu = false
-    
-    // Define menu items
+
+    // Menu Items
     private let menuItems: [(icon: String, label: String, action: () -> Void)] = [
         ("phone.fill", "Emergency Call", { print("Emergency Call tapped") }),
         ("car.fill", "Book Cab", { print("Book Cab tapped") }),
         ("wrench.and.screwdriver.fill", "Report Issue", { print("Report Issue tapped") })
     ]
-    
+
     var body: some View {
         VStack {
             Spacer()
             HStack {
                 Spacer()
                 ZStack {
+                    // Dim Background when menu is open
+                    if isMenuOpen {
+                        Color.black.opacity(0.4)
+                            .ignoresSafeArea()
+                            .onTapGesture {
+                                withAnimation(.spring()) {
+                                    isMenuOpen = false
+                                }
+                            }
+                    }
+                    
                     // Menu Items
                     if isMenuOpen {
-                        VStack(spacing: 12) {
+                        VStack(spacing: 45) {
                             ForEach(menuItems.indices, id: \.self) { index in
                                 MenuButton(
                                     icon: menuItems[index].icon,
@@ -104,68 +108,51 @@ struct FloatingActionButton: View {
                                         }
                                     }
                                 )
-                                .transition(.asymmetric(
-                                    insertion: .scale(scale: 0.1)
-                                        .combined(with: .opacity)
-                                        .combined(with: .move(edge: .trailing)),
-                                    removal: .scale(scale: 0.1)
-                                        .combined(with: .opacity)
-                                ))
+                                .rotationEffect(.degrees(isMenuOpen ? 0 : -90))
+                                .scaleEffect(isMenuOpen ? 1 : 0.5)
+                                .opacity(isMenuOpen ? 4 : 1)
                                 .animation(
-                                    .spring(
-                                        response: 0.3,
-                                        dampingFraction: 0.7,
-                                        blendDuration: 0
-                                    ).delay(Double(index) * 0.1),
+                                    .spring(response: 0.5, dampingFraction: 0.6)
+                                        .delay(Double(index) * 0.1),
                                     value: isMenuOpen
                                 )
                             }
                         }
-                        .padding(.bottom, 85)
+                        .padding(.bottom, 75)
                     }
-                    
+
                     // Main FAB
                     Button(action: {
-                        withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                        withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
                             isMenuOpen.toggle()
                         }
                     }) {
                         ZStack {
                             Circle()
-                                .fill(Color.blue)
-                                .frame(width: 56, height: 56)
-                                .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 2)
+                                .fill(Color.blue.gradient)
+                                .frame(width: 90, height: 50)
+                                .opacity(2.00)
+                                .shadow(color: .black.opacity(0.25), radius: 8, x: 0, y: 4)
                             
                             Image(systemName: "plus")
-                                .font(.system(size: 24, weight: .semibold))
+                                .font(.system(size: 28, weight: .bold))
                                 .foregroundColor(.white)
-                                .rotationEffect(.degrees(isMenuOpen ? 45 : 0))
+                                .rotationEffect(.degrees(isMenuOpen ? 45 : 1))
                         }
                     }
                     .accessibility(label: Text("Quick Actions Menu"))
+                    .padding()
                 }
-                .padding(.trailing, 16)
+//                .padding(.trailing, 30)
+//                .padding(.bottom, 30)
+
             }
-            .padding(.bottom, 16)
+            .padding(.bottom, 60)
         }
-        .background(
-            Group {
-                if isMenuOpen {
-                    Color.black.opacity(0.4)
-                        .ignoresSafeArea()
-                        .onTapGesture {
-                            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                                isMenuOpen = false
-                            }
-                        }
-                        .transition(.opacity)
-                }
-            }
-        )
     }
 }
 
-// Improved Menu Button Component
+// Menu Button Component
 struct MenuButton: View {
     let icon: String
     let label: String
